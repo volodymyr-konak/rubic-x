@@ -15,14 +15,9 @@
                           :in-focus true
                           :layout   solid})})
 
-
 (def model-state (atom (model/provide-model-snapshot)))
 
-(def view-state (->> @model-state
-                     :solids
-                     (map model/solid->edn)
-                     wrap-view-data
-                     atom))
+(def view-state (atom {}))
 
 (defn model->view! []
   (reset! view-state
@@ -30,6 +25,12 @@
                :solids
                (map model/solid->edn)
                wrap-view-data)))
+
+(model->view!)
+
+(defn reset-junk []
+  (def model-state (atom (model/provide-model-snapshot)))
+  (model->view!))
 
 (defn temp-get-solid-from-model []
   (-> @model-state

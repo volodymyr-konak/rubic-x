@@ -14,17 +14,7 @@
 (defn solid->edn [g]
   "Outputs all bits in spiral for each face"
   ;FIXME here
-  (for [node (uber/nodes g)]
-    (-> g
-        (uber/out-edges node)
-        ((partial mapv
-                  (fn [x] (drop-last (uber/attr g x :bits)))))
-        ((fn [x] (conj (apply concat x) node))))))
-
-#_(defn solid->edn [g]
-  "Outputs all bits in spiral for each face"
-  ;FIXME here
   (map
-    (fn [node] (uber/attr g node :bits-seq))
+    (fn [node] (conj (uber/attr g node :bits-seq) node))
     (uber/nodes g)))
 
