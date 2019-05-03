@@ -1,7 +1,8 @@
 (ns rubic.viewmodel.core
   (:require [quil.core :as quil]
             [rubic.model.core :as model]
-            [rubic.view.core :as viz]))
+            [rubic.view.core :as viz]
+            [rubic.view.input-processor :as input]))
 
 (def simple-config [:cube :3d])
 ;(def simple-config [:tetraedr :3d])
@@ -50,13 +51,16 @@
   true)
 
 (defn draw []
-  (renderer view-state))
+  "looped executed func"
+  (let [last-key (input/read-from-input-queue!)]
+    (when last-key (revolve last-key 1))
+    (renderer view-state)))
 
 (quil/defsketch Rubic
                 :title "Rubic"
                 :setup setup
                 :draw draw
-                ;:key-pressed key-pressed
+                :key-pressed input/keyboard-key-pressed
                 ;:mouse-pressed mouse-pressed
                 :frame-rate 30
                 ;:renderer :p3d
