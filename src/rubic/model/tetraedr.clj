@@ -1,6 +1,5 @@
 (ns rubic.model.tetraedr
-  (:require [ubergraph.core :as uber]
-            [rubic.model.common :as common]))
+  (:require [rubic.model.common :as common]))
 
 (def tetraedr-faces-ids [:a :b :c :d])
 

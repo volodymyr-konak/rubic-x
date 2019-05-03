@@ -6,6 +6,7 @@
 
 (def simple-config [:cube :3d])
 ;(def simple-config [:tetraedr :3d])
+;(def simple-config [:dodecahedron :3d])
 
 (def renderer (apply viz/renderer-factory simple-config))
 
@@ -53,6 +54,7 @@
 (defn draw []
   "looped executed func"
   (let [last-key (input/read-from-input-queue!)]
+    ; FIXME unhardcode to dynamic module
     (when last-key (revolve last-key 1))
     (renderer view-state)))
 
@@ -64,4 +66,4 @@
                 ;:mouse-pressed mouse-pressed
                 :frame-rate 30
                 ;:renderer :p3d
-                :size [1200 400])
+                :size [1200 800])
