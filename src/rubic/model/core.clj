@@ -3,13 +3,15 @@
             [rubic.model.cube :as cube]
             [rubic.model.tetraedr :as tetra]))
 
-(defn create-solid []
-  (cube/gen-cube))
+(defn create-solid [type]
+  (case type
+    :tetraedr (tetra/gen-tetraedr)
+    :cube (cube/gen-cube)))
 
-(defn provide-model-snapshot []
+(defn provide-model-snapshot [figure-type dimensions-mode]
   ""
-  {:multi-dimensional-graph nil
-   :solids [(create-solid)]})
+  {:dimensions-mode dimensions-mode
+   :solids [(create-solid figure-type)]})
 
 (defn solid->edn [g]
   "Outputs all bits in spiral for each face"

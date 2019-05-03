@@ -56,18 +56,14 @@
              [(* i bit-size) (* j bit-size)]
              (bit bit-size (get id-display-mapping id))))
          face-bits
-         spiral-square-face-map
-         )))
+         spiral-square-face-map)))
 
 (defn simple-plane [data]
   (let [cube (-> data
                  :solids
                  first
-                 :layout)
-        ;_ (clojure.pprint/pprint data)
-        ;_ (clojure.pprint/pprint cube)
-        ]
+                 :layout)]
     (doseq [i (range 1 7)]
       (quil/with-translation
         [(+ 50 (* i 150)) 50]
-        (render-cube-face (nth cube ( - i 1)))))))
+        (render-cube-face (nth cube (- i 1)))))))

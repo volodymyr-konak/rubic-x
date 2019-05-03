@@ -4,15 +4,12 @@
 
 (def tetraedr-faces-ids [:a :b :c :d])
 
-(defn gen-tetra []
-  (-> (uber/ubergraph
-        true false)
-      (uber/add-directed-edges*
-        (for [face-id tetraedr-faces-ids
-              another-f-id tetraedr-faces-ids
-              :when (not= face-id another-f-id)]
-          [face-id
-           another-f-id
-           {:bits [face-id face-id face-id]}]))
-      ))
+(def connections [[[:a :b] [:a :c] [:a :d]]
+                  [[:b :a] [:b :c] [:b :d]]
+                  [[:c :a] [:c :b] [:c :d]]
+                  [[:d :a] [:d :c] [:d :b]]])
+
+(defn gen-tetraedr []
+  (common/generate-solid tetraedr-faces-ids connections))
+
 

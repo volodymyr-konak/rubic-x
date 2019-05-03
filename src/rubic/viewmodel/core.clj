@@ -1,10 +1,12 @@
 (ns rubic.viewmodel.core
   (:require [quil.core :as quil]
             [rubic.model.core :as model]
-            [rubic.view.core :as renderer]))
+            [rubic.view.core :as viz]))
 
-(defn model->view [model-data]
-  [model-data])
+(def simple-config [:cube :3d])
+;(def simple-config [:tetraedr :3d])
+
+(def renderer (apply viz/renderer-factory simple-config))
 
 (defn wrap-view-data [presentation-data-seq]
   {:selected-face      nil
@@ -15,7 +17,7 @@
                           :in-focus true
                           :layout   solid})})
 
-(def model-state (atom (model/provide-model-snapshot)))
+(def model-state (atom (apply model/provide-model-snapshot simple-config)))
 
 (def view-state (atom {}))
 
@@ -29,7 +31,7 @@
 (model->view!)
 
 (defn reset-junk []
-  (def model-state (atom (model/provide-model-snapshot)))
+  (def model-state (atom (model/provide-model-snapshot :cube :3d)))
   (model->view!))
 
 (defn temp-get-solid-from-model []
@@ -38,14 +40,17 @@
       first))
 
 (defn revolve [face-kw n]
-  (swap! model-state update-in [:solids] (fn [[g]] (vector (rubic.model.common/revolve-face g nil face-kw n))))
+  (swap! model-state update-in [:solids]
+         (fn [[g]]
+           (vector
+             (rubic.model.common/revolve-face g nil face-kw n))))
   (model->view!))
 
 (defn setup []
   true)
 
 (defn draw []
-  (renderer/render view-state))
+  (renderer view-state))
 
 (quil/defsketch Rubic
                 :title "Rubic"

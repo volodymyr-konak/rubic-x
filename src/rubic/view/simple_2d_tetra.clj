@@ -1,6 +1,12 @@
-(ns rubic.view.simple-2d-v2
+(ns rubic.view.simple-2d-tetra
   (:require [quil.core :as quil]))
 
+
+(def id-display-mapping
+  {:a 1
+   :b 2
+   :c 3
+   :d 4})
 
 (defn domino-number [number a]
   (case number
@@ -39,16 +45,24 @@
    (quil/rect 0 0 a a 5)
    (domino-number id a)))
 
-(defn face [id]
-  (let [bit-size 40]
-    (doseq [i [-1 0 1]
-            j [-1 0 1]]
-      (quil/with-translation
-        [(* i bit-size) (* j bit-size)]
-        (bit bit-size id)))))
+(def spiral-triangular-face-map
+  [[-1.5 -1] [0 -1] [1.5 -1] [1 0] [0 1] [-1 0] [0 0]])
 
-(defn simple-plane []
-  (doseq [i (range 1 7)]
-    (quil/with-translation
-      [(+ 50 (* i 150)) 50]
-      (face i))))
+(defn render-triang-face [face-bits]
+  (let [bit-size 40]
+    (mapv (fn [id [i j]]
+            (quil/with-translation
+              [(* i bit-size) (* j bit-size)]
+              (bit bit-size (get id-display-mapping id))))
+          face-bits
+          spiral-triangular-face-map)))
+
+(defn simple-plane [data]
+  (let [tetr (-> data
+                 :solids
+                 first
+                 :layout)]
+    (doseq [i (range 1 5)]
+      (quil/with-translation
+        [(+ 50 (* i 150)) 50]
+        (render-triang-face (nth tetr (- i 1)))))))
