@@ -53,9 +53,13 @@
 
 (defn draw []
   "looped executed func"
+  (quil/background 200)
   (let [last-key (input/read-from-input-queue!)]
     ; FIXME unhardcode to dynamic module
-    (when last-key (revolve last-key 1))
+    (when (contains? #{:a :b :c :d :e :f :g :h :k :l :m :n} last-key)
+      (revolve last-key 1))
+
+    (quil/camera 500 500 500 0 0 0 0 0 -1)
     (renderer view-state)))
 
 (quil/defsketch Rubic
@@ -65,5 +69,5 @@
                 :key-pressed input/keyboard-key-pressed
                 ;:mouse-pressed mouse-pressed
                 :frame-rate 30
-                ;:renderer :p3d
+                :renderer :p3d
                 :size [1200 800])

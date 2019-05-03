@@ -1,13 +1,21 @@
 (ns rubic.model.cube
   (:require [rubic.model.common :as common]))
 
-(def cube-faces-ids [:a :b :c :d :e :f])
-(def connections [[[:a :b] [:a :c] [:a :d] [:a :e]]
-                  [[:f :b] [:f :c] [:f :d] [:f :e]]
-                  [[:b :a] [:b :c] [:b :e] [:b :f]]
-                  [[:c :a] [:c :b] [:c :d] [:c :f]]
-                  [[:d :a] [:d :c] [:d :e] [:d :f]]
-                  [[:e :a] [:e :b] [:e :d] [:e :f]]])
+(def cube-faces-ids [:a
+                     :b :c :d :e
+                     :f])
+
+(def connections-per-node
+  {:a [:e :d :c :b]
+   :b [:a :c :f :e]
+   :c [:a :d :f :b]
+   :d [:c :a :e :f]
+   :e [:d :a :b :f]
+   :f [:b :c :d :e]})
+
+(def connections (for [[node destintations] connections-per-node]
+                   (for [dest destintations]
+                     [node dest])))
 
 (defn gen-cube []
   (common/generate-solid cube-faces-ids connections))
