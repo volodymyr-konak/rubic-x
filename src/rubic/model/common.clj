@@ -35,7 +35,7 @@
         edges-bits (mapv (fn [e] ((uber/attr graph e :bits-fn) graph)) g-edges)]
     (reduce
       (fn [g [edge bits]]
-        (let [edge-id-for-node (uber/attr g edge :order)
+        (let [edge-id-for-node (uber/attr g (:dest edge) (:src edge) :order)
               replace-index (* 2 edge-id-for-node)
               bits-seq (uber/attr g (:src edge) :bits-seq)
               processed-bits-seq (replace-bits-subseq bits-seq bits replace-index)]
@@ -52,10 +52,7 @@
     (let []
       (-> g1
           (shift-lines-around-target face-id direction)
-          (shift-lines-on-target face-id direction)
-          )
-      ;(clojure.pprint/pprint g1)
-      )))
+          (shift-lines-on-target face-id direction)))))
 
 
 (defn generate-solid [faces-ids connections-per-face]
@@ -80,12 +77,7 @@
                     :bits-fn (fn [graph-state]
                                "Returns a line of 3 bits, on the edge between src and dst"
                                (let [line-base-bit-index (dec (* 2 (inc i)))
-                                     bits-seq (uber/attr graph-state src :bits-seq)
-                                     _ (clojure.pprint/pprint [(conj bits-seq (first bits-seq))
-                                                               (dec line-base-bit-index)
-                                                               (-> line-base-bit-index
-                                                                   inc
-                                                                   inc)])]
+                                     bits-seq (uber/attr graph-state src :bits-seq)]
                                  (subvec
                                    (conj bits-seq (first bits-seq))
                                    (dec line-base-bit-index)
