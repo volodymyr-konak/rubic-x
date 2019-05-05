@@ -31,36 +31,43 @@
 
 (def faces-cube-map
   (let [scale 200]
-    [{:rotation    [0 0 0 0]
-     :translation [0 0 scale]}
-     {:rotation    [(* 3 q/HALF-PI) 1 0 0]
-      :translation [0 0 (- scale)]}
-    {:rotation    [(* 2 q/THIRD-PI) -1 -1 1]
-     :translation [0 0 scale]}
-     {:rotation    [(* 4 q/THIRD-PI) 1 1 1]
-      :translation [0 0 scale]}
-     {:rotation    [(* 3 q/HALF-PI) 0 1 0]
-      :translation [0 0 (- scale)]}
-     {:rotation    [0 0 0 0]
-      :translation [0 0 (- scale)]}]))
+    [{:rotation-vector    [q/HALF-PI 0 0 1]
+      :translation-vector [0 0 scale]}
+     {:rotation-vector    [q/HALF-PI -1 0 0
+                           q/PI 0 0 1]
+      :translation-vector [0 0 scale]}
+     {:rotation-vector    [q/HALF-PI -1 0 0
+                           q/HALF-PI 0 0 1]
+      :translation-vector [0 0 scale]}
+     {:rotation-vector    [q/HALF-PI -1 0 0]
+      :translation-vector [0 0 scale]}
+     {:rotation-vector    [q/HALF-PI -1 0 0
+                           q/HALF-PI 0 0 -1]
+      :translation-vector [0 0 scale]}
+     {:rotation-vector    [q/PI 0 1 0]
+      :translation-vector [0 0 scale]}]))
 
 (defn draw-cube [data]
   (let [cube (-> data
                  :solids
                  first
-                 :layout)]
+                 :layout)
+        nested-rotation (fn [r-vec form]
+                          (seq
+                            ((reduce
+                               (fn [form-executed rv]
+                                 (fn [] (quil/with-rotation
+                                          (vec rv)
+                                          (form-executed))))
+                               form
+                               (partition 4 r-vec)))))]
     (seq
       (map-indexed
-       (fn [i f]
-
-         (quil/with-rotation
-           (:rotation f)
-           (quil/with-translation
-             (:translation f)
-             (render-cube-face (nth cube i)))))
-       faces-cube-map))
-    #_(doseq [f faces-cube-map]
-      (quil/with-translation
-        (:translation f)
-        ;[(+ 50 (* i 150)) 50]
-        (render-cube-face (nth cube (- i 1)))))))
+        (fn [i {:keys [rotation-vector translation-vector]}]
+          (nested-rotation
+            rotation-vector
+            (fn []
+              (quil/with-translation
+                translation-vector
+                (render-cube-face (nth cube i))))))
+        faces-cube-map))))

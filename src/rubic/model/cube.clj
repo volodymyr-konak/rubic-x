@@ -9,8 +9,8 @@
   {:a [:e :d :c :b]
    :b [:a :c :f :e]
    :c [:a :d :f :b]
-   :d [:c :a :e :f]
-   :e [:d :a :b :f]
+   :d [:a :e :f :c]
+   :e [:a :b :f :d]
    :f [:b :c :d :e]})
 
 (def connections (for [[node destintations] connections-per-node]
