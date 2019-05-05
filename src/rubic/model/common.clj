@@ -31,11 +31,14 @@
                         (* 2 shift-value)))})))
 
 (defn shift-lines-around-target [graph face-node-id shift-value]
-  (let [g-edges (uber/in-edges graph face-node-id)
+  (let [g-edges (sort-by
+                  (fn [e1]
+                    (uber/attr graph (:dest e1) (:src e1) :order))
+                  (uber/in-edges graph face-node-id))
         edges-bits (mapv (fn [e] ((uber/attr graph e :bits-fn) graph)) g-edges)]
     (reduce
       (fn [g [edge bits]]
-        (let [edge-id-for-node (uber/attr g (:dest edge) (:src edge) :order)
+        (let [edge-id-for-node (uber/attr g edge :order)
               replace-index (* 2 edge-id-for-node)
               bits-seq (uber/attr g (:src edge) :bits-seq)
               processed-bits-seq (replace-bits-subseq bits-seq bits replace-index)]
