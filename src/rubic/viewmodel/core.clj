@@ -5,7 +5,7 @@
             [rubic.view.input-processor :as input]))
 
 (def simple-config [:cube :3d])
-;(def simple-config [:tetraedr :3d])
+(def simple-config [:tetraedr :3d])
 ;(def simple-config [:dodecahedron :3d])
 
 (def renderer (apply viz/renderer-factory simple-config))
@@ -59,7 +59,7 @@
     (when (contains? #{:a :b :c :d :e :f :g :h :k :l :m :n} last-key)
       (revolve last-key 1))
 
-    (quil/camera 500 500 500 0 0 0 0 0 -1)
+    (quil/camera 500 300 -200 0 0 0 0 0 -1)
     (renderer view-state)))
 
 (quil/defsketch Rubic
