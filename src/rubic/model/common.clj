@@ -65,8 +65,7 @@
         (uber/add-nodes-with-attrs*
           (for [node-id faces-ids]
             [node-id
-             ; FIXME this is wrong (+ 2 ...
-             {:bits-seq (vec (repeat (+ 2 (count faces-ids)) node-id))}]))
+             {:bits-seq (vec (repeat (* 2 (count (first connections-per-face))) node-id))}]))
         (uber/add-directed-edges*
           (apply
             concat
@@ -76,7 +75,6 @@
                   [src
                    dst
                    {:order   i
-                    :bits    [src src src]
                     :bits-fn (fn [graph-state]
                                "Returns a line of 3 bits, on the edge between src and dst"
                                (let [line-base-bit-index (dec (* 2 (inc i)))
